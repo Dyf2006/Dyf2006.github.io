@@ -1,0 +1,20 @@
+---
+import { links, site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="link-row">
+      {
+        links.map((link) => (
+          <a href={link.href} rel="noopener">
+            {link.label}
+          </a>
+        ))
+      }
+    </div>
+    <p>© {year} {site.author} · 站点内容为占位示例，替换 <code>src/content/</code> 与 <code>src/data/site.ts</code> 即可。</p>
+  </div>
+</footer>

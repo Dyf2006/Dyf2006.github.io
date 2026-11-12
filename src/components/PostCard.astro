@@ -1,0 +1,28 @@
+---
+import { formatDate, type Post } from '../lib/posts';
+import { sections } from '../data/site';
+
+const { post, showSection = false } = Astro.props as { post: Post; showSection?: boolean };
+const section = sections[post.section];
+---
+
+<li class="post-card">
+  <p class="meta">
+    <time datetime={post.date.toISOString()}>{formatDate(post.date)}</time>
+    {showSection && <span class="sep">·</span>}
+    {showSection && <span>{section.label}</span>}
+    {post.focus && <span class="sep">·</span>}
+    {post.focus && <span>{post.focus}</span>}
+  </p>
+  <h3>
+    <a class="title-link" href={`${section.href}${post.slug}/`}>{post.title}</a>
+  </h3>
+  <p class="desc">{post.description}</p>
+  {
+    post.tags.length > 0 && (
+      <p class="tags">
+        {post.tags.map((tag) => `#${tag}`).join('  ')}
+      </p>
+    )
+  }
+</li>

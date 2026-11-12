@@ -1,0 +1,50 @@
+---
+import PostCard from '../components/PostCard.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getPosts } from '../lib/posts';
+import { sectionOrder, sections, site } from '../data/site';
+
+const posts = await getPosts();
+const latest = posts.slice(0, 5);
+const counts = Object.fromEntries(sectionOrder.map((id) => [id, posts.filter((p) => p.section === id).length]));
+---
+
+<BaseLayout path="/">
+  <div class="wrap">
+    <section class="hero">
+      <h1>{site.tagline}</h1>
+      <p>{site.description}</p>
+    </section>
+
+    <section class="block">
+      <p class="kicker">栏目</p>
+      <div class="section-grid">
+        {
+          sectionOrder.map((id) => (
+            <a class="section-card" href={sections[id].href}>
+              <strong>
+                {sections[id].title} · {counts[id]}
+              </strong>
+              <span>{sections[id].blurb}</span>
+            </a>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="block">
+      <p class="kicker">最近更新</p>
+      {
+        latest.length > 0 ? (
+          <ul class="card-list">
+            {latest.map((post) => (
+              <PostCard post={post} showSection />
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">还没有内容。往 <code>src/content/</code> 里放 Markdown 就会出现在这里。</p>
+        )
+      }
+    </section>
+  </div>
+</BaseLayout>

@@ -1,0 +1,38 @@
+---
+import { render } from 'astro:content';
+import ContentLayout from '../../layouts/ContentLayout.astro';
+import { getPosts } from '../../lib/posts';
+import { sectionOrder, sections, type SectionId } from '../../data/site';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { section: SectionId; slug: string } }> = [];
+  for (const section of sectionOrder) {
+    for (const post of await getPosts(section)) {
+      paths.push({ params: { section, slug: post.slug } });
+    }
+  }
+  return paths;
+}
+
+const { section, slug } = Astro.params as { section: SectionId; slug: string };
+const posts = await getPosts(section);
+const post = posts.find((item) => item.slug === slug);
+
+if (!post) return;
+
+const { Content } = await render(post.entry);
+const meta = sections[section];
+---
+
+<ContentLayout
+  title={post.title}
+  description={post.description}
+  date={post.date}
+  updated={post.updated}
+  tags={post.tags}
+  focus={post.focus}
+  section={section}
+  path={meta.href}
+>
+  <Content />
+</ContentLayout>

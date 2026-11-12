@@ -1,0 +1,52 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import { formatDate } from '../lib/posts';
+import { sections } from '../data/site';
+
+type Props = {
+  title: string;
+  description?: string;
+  date?: Date;
+  updated?: Date;
+  tags?: string[];
+  focus?: string;
+  section?: keyof typeof sections;
+  path: string;
+};
+
+const { title, description, date, updated, tags = [], focus, section, path } = Astro.props;
+---
+
+<BaseLayout title={title} description={description} path={path}>
+  <article>
+    <header class="post-header">
+      <div class="wrap">
+        {section && <p class="kicker">{sections[section].title}</p>}
+        <h1>{title}</h1>
+        {
+          date && (
+            <p class="meta">
+              <time datetime={date.toISOString()}>{formatDate(date)}</time>
+              {updated && <span class="sep">·</span>}
+              {updated && <span>更新于 {formatDate(updated)}</span>}
+              {focus && <span class="sep">·</span>}
+              {focus && <span>{focus}</span>}
+            </p>
+          )
+        }
+        {
+          tags.length > 0 && (
+            <p class="tags">
+              {tags.map((tag) => `#${tag}`).join('  ')}
+            </p>
+          )
+        }
+      </div>
+    </header>
+    <div class="post-body">
+      <div class="wrap prose">
+        <slot />
+      </div>
+    </div>
+  </article>
+</BaseLayout>

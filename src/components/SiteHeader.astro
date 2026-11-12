@@ -1,0 +1,22 @@
+---
+import { nav, site } from '../data/site';
+import ThemeToggle from './ThemeToggle.astro';
+
+const { path = '' } = Astro.props;
+---
+
+<header class="site-header">
+  <div class="wrap">
+    <a class="brand" href="/">{site.name}</a>
+    <nav class="site-nav" aria-label="主导航">
+      {
+        nav.map((link) => (
+          <a href={link.href} aria-current={link.href === path ? 'page' : undefined}>
+            {link.label}
+          </a>
+        ))
+      }
+    </nav>
+    <ThemeToggle />
+  </div>
+</header>

@@ -1,0 +1,41 @@
+---
+import PostCard from '../../components/PostCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPosts } from '../../lib/posts';
+import { sections, type SectionId } from '../../data/site';
+
+export async function getStaticPaths() {
+  return (['writing', 'music', 'research'] as SectionId[]).map((section) => ({
+    params: { section },
+  }));
+}
+
+const { section } = Astro.params as { section: SectionId };
+const meta = sections[section];
+const posts = await getPosts(section);
+const path = meta.href;
+---
+
+<BaseLayout title={meta.title} description={meta.blurb} path={path}>
+  <div class="wrap">
+    <section class="hero">
+      <p class="kicker">{meta.label}</p>
+      <h1>{meta.title}</h1>
+      <p>{meta.blurb}</p>
+    </section>
+
+    <section class="block">
+      {
+        posts.length > 0 ? (
+          <ul class="card-list">
+            {posts.map((post) => (
+              <PostCard post={post} />
+            ))}
+          </ul>
+        ) : (
+          <p class="empty">这个栏目还空着。</p>
+        )
+      }
+    </section>
+  </div>
+</BaseLayout>

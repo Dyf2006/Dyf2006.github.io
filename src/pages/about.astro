@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { links, site } from '../data/site';
+---
+
+<BaseLayout title="关于" path="/about/">
+  <div class="wrap">
+    <section class="hero">
+      <p class="kicker">关于</p>
+      <h1>你好，我是 {site.author}</h1>
+      <p>{site.tagline}</p>
+    </section>
+
+    <section class="block prose">
+      <h2>这个站放什么</h2>
+      <p>占位文案。写清楚你为什么开这个站，以及三个栏目分别会持续更新什么。</p>
+      <h2>我是谁</h2>
+      <p>占位文案。两三段就够：现在在做什么、和文学/音乐的关系是怎么开始的。</p>
+      <h2>联系方式</h2>
+      <div class="link-row">
+        {
+          links.map((link) => (
+            <a href={link.href} rel="noopener">
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+    </section>
+  </div>
+</BaseLayout>
